@@ -1,4 +1,3 @@
-#[no_std]
 //! This library enables the creation of recursive closures by providing a
 //! single macro [`fix_fn`]. The functionality is similar to the
 //! [Y combinator](https://en.wikipedia.org/wiki/Fixed-point_combinator#Fixed-point_combinators_in_lambda_calculus).
@@ -26,6 +25,7 @@
 //! 
 //! Unfortunately, mutable recursive closures are not supported.
 
+#[no_std]
 
 /// Takes a closure definition where the first parameter will be a [`Fn`] to the closure itself.
 /// Returns a recursive closure with the same signature, except the first parameter will be
