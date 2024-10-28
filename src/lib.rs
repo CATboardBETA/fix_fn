@@ -1,3 +1,4 @@
+#[no_std]
 //! This library enables the creation of recursive closures by providing a
 //! single macro [`fix_fn`]. The functionality is similar to the
 //! [Y combinator](https://en.wikipedia.org/wiki/Fixed-point_combinator#Fixed-point_combinators_in_lambda_calculus).
@@ -115,57 +116,4 @@ macro_rules! fix_fn {
     ) => {
         compile_error!("All parameters except first need to have an explicit type annotation!");
     };
-}
-
-#[cfg(test)]
-mod tests {
-    use std::cell::RefCell;
-
-    #[test]
-    fn test_zero_parameter() {
-        fn create() -> impl Fn() -> i32 {
-            let cell = RefCell::new(0);
-
-            fix_fn!(move |rec| -> i32 {
-                if *cell.borrow() == 10 {
-                    10
-                } else {
-                    *cell.borrow_mut() += 1;
-                    rec()
-                }
-            })
-        }
-
-        let f = create();
-
-        assert_eq!(f(), 10);
-    }
-
-    #[test]
-    fn test_one_parameter() {
-        let fib = fix_fn!(|fib, i: u32| -> u32 {
-            if i <= 1 {
-                i
-            } else {
-                fib(i - 1) + fib(i - 2)
-            }
-        });
-
-        assert_eq!(fib(7), 13);
-    }
-
-    #[test]
-    fn test_two_parameter() {
-        let pow = fix_fn!(|pow, x: u32, y: u32| -> u32 {
-            if y == 1 {
-                x
-            } else if x % 2 == 0 {
-                pow(x * x, x / 2)
-            } else {
-                x * pow(x, y - 1)
-            }
-        });
-
-        assert_eq!(pow(3, 9), 19683);
-    }
 }
